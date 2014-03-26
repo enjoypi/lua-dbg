@@ -153,6 +153,7 @@ lua_Debug last_breaked = {0};
 
  void hook_line(lua_State* L, lua_Debug* ar)
 {
+	printf("%s\n", __FUNCTION__);
 	dict* file_dictionary = NULL;
 
 	if (L == NULL || ar == NULL)
@@ -166,6 +167,8 @@ lua_Debug last_breaked = {0};
 	{
 		return;
 	}
+
+	printf("%s\t%s\t%d\n", __FUNCTION__, ar->source, ar->currentline);
 
 	if (debugger_step_count > 0)
 	{
@@ -294,6 +297,7 @@ lua_Debug last_breaked = {0};
 
  int debugger_start(lua_State* L)
 {
+	printf("%s\n", __FUNCTION__);
 	int hookmask = lua_gethookmask(L) | LUA_MASKLINE;
 	lua_pushboolean(L, lua_sethook(L, hook, hookmask, 0));
 	return 1;
@@ -301,6 +305,7 @@ lua_Debug last_breaked = {0};
 
  int debugger_stop(lua_State* L)
 {
+	printf("%s\n", __FUNCTION__);
 	int hookmask = lua_gethookmask(L) & ~LUA_MASKLINE;
 	lua_pushboolean(L, lua_sethook(L, hook, hookmask, 0));
 	return 1;
