@@ -502,7 +502,7 @@ static const luaL_Reg debugger_funcs[] =
 	{ NULL, NULL }
 };
 
-int luaopen_debugger(lua_State* L)
+int luaopen_dbg(lua_State* L)
 {
 	if (initialize() != 0)
 	{
