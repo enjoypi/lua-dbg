@@ -1,4 +1,4 @@
-﻿local select = select
+local select = select
 local tostring = tostring
 local string = require("string")
 local table = require("table")

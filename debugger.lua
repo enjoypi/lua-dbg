@@ -1,4 +1,4 @@
-﻿local _G = _G
+local _G = _G
 local loadstring = loadstring
 
 local require = require
@@ -20,7 +20,6 @@ local tostring = tostring
 local collectgarbage = collectgarbage
 local tableEnhanced = require("tableEnhanced")
 local os = require("os")
-
 
 local dbg = require("dbg")
 
@@ -1031,7 +1030,7 @@ local function TrimPath(fullPath)
 end
 
 function Break(reason, frame)
-	currentFrame = beginFrame + (frame or 0)
+	currentFrame = beginFrame + (frame or 1)
 	local thread, main = coroutineEnhanced.GetCurrentThread()
 	if (type(thread) ~= "thread") then
 		io.write("Can not get current thread, can not debug.\n")

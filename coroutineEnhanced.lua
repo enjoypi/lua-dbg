@@ -1,9 +1,10 @@
-﻿local require = require
+local require = require
 local os = os
 local type = type
 local tostring = tostring
 local coroutine = require("coroutine")
 local table = require("table")
+local print = print
 
 local function CoroutineRecursive(f, ...)
 	return CoroutineRecursive(coroutine.yield(f(...)))

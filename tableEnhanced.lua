@@ -1,4 +1,4 @@
-﻿local require = require
+local require = require
 local pairs = pairs
 local ipairs = ipairs
 local tostring = tostring

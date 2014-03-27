@@ -518,6 +518,10 @@ int luaopen_dbg(lua_State* L)
 		return 0;
 	}
 
+#if LUA_VERSION_NUM == 502
 	luaL_newlib(L, debugger_funcs);
+#elif LUA_VERSION_NUM == 501
+	luaL_register(L, "dbg", debugger_funcs);
+#endif
 	return 1;
 }

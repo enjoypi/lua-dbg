@@ -7,6 +7,6 @@ module(...)
 function f( ... )
 	-- body
 	for k, v in pairs(require("debug")) do
-		--print(..., k, v)
+		print(k, v)
 	end
 end
