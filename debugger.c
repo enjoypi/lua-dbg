@@ -129,7 +129,6 @@ lua_Debug last_breaked = {0};
 
  void do_break(lua_State* L, lua_Debug* ar)
 {
-	printf("进入断点\n");
 	int n = lua_gettop(L);
 	debugger_step_count = 0;
 	debugger_next_count = 0;
@@ -153,7 +152,6 @@ lua_Debug last_breaked = {0};
 
  void hook_line(lua_State* L, lua_Debug* ar)
 {
-	printf("%s\n", __FUNCTION__);
 	dict* file_dictionary = NULL;
 
 	if (L == NULL || ar == NULL)
@@ -167,8 +165,6 @@ lua_Debug last_breaked = {0};
 	{
 		return;
 	}
-
-	printf("%s\t%s\t%d\n", __FUNCTION__, ar->source, ar->currentline);
 
 	if (debugger_step_count > 0)
 	{
@@ -297,17 +293,25 @@ lua_Debug last_breaked = {0};
 
  int debugger_start(lua_State* L)
 {
-	printf("%s\n", __FUNCTION__);
-	int hookmask = lua_gethookmask(L) | LUA_MASKLINE;
-	lua_pushboolean(L, lua_sethook(L, hook, hookmask, 0));
+	lua_State * t = lua_tothread(L, -1);
+	if (t == NULL) {
+		t = L;
+	}
+
+	int hookmask = lua_gethookmask(t) | LUA_MASKLINE;
+	lua_pushboolean(L, lua_sethook(t, hook, hookmask, 0));
 	return 1;
 }
 
  int debugger_stop(lua_State* L)
 {
-	printf("%s\n", __FUNCTION__);
-	int hookmask = lua_gethookmask(L) & ~LUA_MASKLINE;
-	lua_pushboolean(L, lua_sethook(L, hook, hookmask, 0));
+	lua_State * t = lua_tothread(L, -1);
+	if (t == NULL) {
+		t = L;
+	}
+
+	int hookmask = lua_gethookmask(t) & ~LUA_MASKLINE;
+	lua_pushboolean(L, lua_sethook(t, hook, hookmask, 0));
 	return 1;
 }
 
@@ -345,11 +349,11 @@ lua_Debug last_breaked = {0};
 			return 1;
 		}
 
-		linedefined_dictionary = dictFetchValue(breakpoint_dictionary, &line);
+		linedefined_dictionary = dictFetchValue(breakpoint_dictionary, (const void*)line);
 		if (linedefined_dictionary == NULL)
 		{
 			linedefined_dictionary = dictCreate(&dictTypeHeapStringCopyKey, NULL);
-			if (linedefined_dictionary == NULL || dictAdd(breakpoint_dictionary, &line, linedefined_dictionary) != DICT_OK)
+			if (linedefined_dictionary == NULL || dictAdd(breakpoint_dictionary, (void*)line, linedefined_dictionary) != DICT_OK)
 			{
 				lua_pushinteger(L, 0);
 				return 1;
@@ -424,7 +428,7 @@ lua_Debug last_breaked = {0};
 		const char* file_name = trim_path(source);
 		if (file_name != NULL)
 		{
-			linedefined_dictionary = dictFetchValue(breakpoint_dictionary, &line);
+			linedefined_dictionary = dictFetchValue(breakpoint_dictionary, (const void *)line);
 			if (linedefined_dictionary != NULL)
 			{
 				breakpoint_info* bp = dictFetchValue(linedefined_dictionary, file_name);

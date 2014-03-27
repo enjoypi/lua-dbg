@@ -1229,7 +1229,7 @@ commands["continue"] = function(thread, count)
 	if (type(count) == "number") then
 		dbg.SetCurrentBPIgnoreCount(count)
 	end
-	return dbg.Start()
+	return dbg.Start(thread)
 end
 commands["c"] = commands["continue"]
 --commands["delete"] = function(thread)
@@ -1271,7 +1271,7 @@ end
 commands["finish"] = function(thread)
 	local ar = stack[currentFrame]
 	if (dbg.Finish(ar.linedefined, ar.source)) then
-		return dbg.Start()
+		return dbg.Start(thread)
 	end
 end
 commands["fin"] = commands["finish"]
@@ -1311,7 +1311,7 @@ commands["next"] = function(thread, count)
 	count = tonumber(count)
 	local ar = stack[currentFrame]
 	if (dbg.Next(count or 1, ar.linedefined, ar.source)) then
-		return dbg.Start()
+		return dbg.Start(thread)
 	end
 end
 commands["n"] = commands["next"]
@@ -1341,7 +1341,7 @@ commands["p"] = commands["print"]
 --
 
 commands["quit"] = function(thread)
-	return dbg.Stop()
+	return dbg.Stop(thread)
 end
 commands["q"] = commands["quit"]
 
@@ -1382,7 +1382,7 @@ end
 commands["step"] = function(thread, count)
 	count = tonumber(count)
 	if (dbg.Step(count or 1)) then
-		return dbg.Start()
+		return dbg.Start(thread)
 	end
 end
 commands["s"] = commands["step"]
